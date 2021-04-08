@@ -183,6 +183,49 @@ func TestDeleteProduct(t *testing.T) {
 }
 
 
+func TestGetCheapestProduct(t *testing.T) {
+	clearTable()
+	prices := [5]float64{10.0, 20.0, 5.0, 9.0, 7.0}
+    prod := [5]string{"CleanCode", "HowToHackWithHTML", "IGotKaliLinuxIamaHacker", "NoteBook","Mr.Robot" }
+    for i := 0; i < len(prices); i++ {
+        a.DB.Exec("INSERT INTO products(name, price) VALUES($1, $2)", prod[i], prices[i])
+	}
+    
+	req, _ := http.NewRequest("GET", "/product/cheapest", nil)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	var m map[string]float64
+	json.Unmarshal(response.Body.Bytes(), &m)
+
+	if m["price"] != prices[2] {
+		t.Errorf("Expected product price to be '%v'. Got '%v'", prices[2], m["price"])
+	}
+}
+
+func TestGetExpansiveProduct(t *testing.T) {
+    clearTable()
+	prices := [5]int{10, 20, 5, 9, 7}
+    products := [5]string{"CleanCode", "HowToHackWithHTML", "IGotKaliLinuxIamaHacker", "NoteBook","Mr.Robot" }
+    for i := 0; i < len(prices); i++ {
+        a.DB.Exec("INSERT INTO products(name, price) VALUES($1, $2)", products[i], prices[i])
+	}
+    
+	req, _ := http.NewRequest("GET", "/product/expansive", nil)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	var m map[string]int
+	json.Unmarshal(response.Body.Bytes(), &m)
+
+	if m["price"] != prices[1] {
+		t.Errorf("Expected product price to be '%v'. Got '%v'", prices[1], m["price"])
+	}
+}
+
+
+
+
 const tableCreationQuery = `CREATE TABLE IF NOT EXISTS products
 (
     id SERIAL,
