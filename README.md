@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/rentaprogrammer/go-mux.svg?branch=main)](https://travis-ci.com/rentaprogrammer/go-mux)
 # go-mux
 
 FH-Hagenberg Homework:  
