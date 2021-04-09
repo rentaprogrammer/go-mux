@@ -11,3 +11,5 @@ services:
 
 script: 
   - go test -v ./...
+   # Build the code
+  - go build -o gomux
