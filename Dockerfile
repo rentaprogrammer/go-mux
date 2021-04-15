@@ -11,6 +11,9 @@ WORKDIR /src
 # Copy local file `main.go` to the working directory
 COPY *.go go.* /src/
 
+# Add Go dependencies
+RUN go get github.com/gorilla/mux && go get github.com/lib/pq
+
 # List items in the working directory (ls)
 RUN ls -laht
 
