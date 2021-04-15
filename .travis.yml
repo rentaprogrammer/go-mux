@@ -12,4 +12,10 @@ services:
 script: 
   - go test -v ./...
    # Build the code
-  - go build -o gomux
+  - CGO_ENABLED=0 GOARCH=amd64 go build -o gomux
+  - echo "$REGISTRY_PASSWORD" | docker login --username $REGISTRY_USER --password-stdin
+  - docker build -f Dockerfile -t christianst/gomux:latest ./
+  - GIT_SHA="$(git rev-parse --short HEAD)"
+  - docker tag christianst/gomux:latest christianst/gomux:$GIT_SHA
+  - docker push christianst/gomux:latest
+  - docker push christianst/gomux:$GIT_SHA
